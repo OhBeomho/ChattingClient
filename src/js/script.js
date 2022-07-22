@@ -23,12 +23,12 @@ function addChat(name, message, time) {
     document.querySelector("#chatting_container").scrollTop = message_list.scrollHeight
 }
 
-function send(socket, message) {
+function send(socket, message, channel) {
     if (message == "") {
         return
     }
 
-    socket.emit("chatting", {
+    socket.emit(channel, {
         name: my_name,
         message
     })
@@ -36,33 +36,50 @@ function send(socket, message) {
 
 window.onload = () => {
     const socket = connect()
-    socket.once("name", name => my_name = name)
-
-    socket.on("chatting", data => {
-        const {
-            name,
-            message,
-            time
-        } = data
-        addChat(name, message, time)
-    })
-    socket.on("server", message => {
-        const server_message_span = document.createElement("span")
-        server_message_span.classList.add("list-group-item", "text-secondary")
-        server_message_span.innerText = message
-        message_list.appendChild(server_message_span)
-    })
-
+    if (socket.connected) console.log("Connected")
     const input_message = document.querySelector("#input_message")
+    const input_name = document.querySelector("#input_name")
+
+    socket.on("name", message => {
+        if (message == "EXISTS") {
+            alert("이미 존재하는 사용자명입니다.\n다른 이름으로 시도해 주세요.")
+        } else if (message == "SUCCESS") {
+            my_name = input_name.value
+            input_name.value = ""
+
+            document.querySelector("#chatting").classList.remove("d-none")
+            document.querySelector("#chatting").classList.add("d-flex")
+            document.querySelector("#username").classList.add("d-none")
+
+            socket.on("chatting", data => {
+                const {
+                    name,
+                    message,
+                    time
+                } = data
+                addChat(name, message, time)
+            })
+            socket.on("server", message => {
+                const server_message_span = document.createElement("span")
+                server_message_span.classList.add("list-group-item", "text-secondary")
+                server_message_span.innerText = message
+                message_list.appendChild(server_message_span)
+            })
+        }
+    })
+
     input_message.addEventListener("keydown", event => {
         if (event.key == "Enter" && !event.shiftKey) {
-            send(socket, input_message.value)
+            send(socket, input_message.value, "chatting")
             input_message.value = ""
             event.preventDefault()
         }
     })
     document.querySelector("#btn_send").addEventListener("click", () => {
-        send(socket, input_message.value)
+        send(socket, input_message.value, "chatting")
         input_message.value = ""
+    })
+    document.querySelector("#btn_enter").addEventListener("click", () => {
+        send(socket, input_name.value, "name")
     })
 }

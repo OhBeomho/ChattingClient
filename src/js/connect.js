@@ -1,10 +1,11 @@
-const options = {
-    "forceNew": true
-}
-const url = "http://nodejs-anonymous-chatting.herokuapp.com"
+let url = "http://nodejs-chatting.herokuapp.com"
 let socket
 
 export const connect = () => {
-    socket = io(url, options)
+    socket = io(url, {
+        forceNew: true,
+        transports: ["websocket"]
+    })
+
     return socket
 }

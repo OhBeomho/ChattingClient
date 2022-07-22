@@ -11,6 +11,7 @@ function createWindow() {
         width: 1400,
         height: 1000,
         webPreferences: {
+            preload: path.join(__dirname, "preload.js"),
             nodeIntegration: true,
             contextIsolation: false
         },
@@ -22,7 +23,7 @@ function createWindow() {
         shell.openExternal(url)
     })
 
-    // Menu.setApplicationMenu(null)
+    Menu.setApplicationMenu(null)
 }
 
 app.whenReady().then(() => {

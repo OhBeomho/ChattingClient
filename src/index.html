@@ -22,7 +22,7 @@
           <span class="navbar-brand mb-0 h1">채팅</span>
         </div>
     </nav>
-    <div class="container-fluid d-flex flex-column" style="height: 95%">
+    <div class="container-fluid d-none flex-column" style="height: 95%" id="chatting">
         <div class="container-fluid flex-grow-1 overflow-auto" id="chatting_container">
             <div class="list-group-flush" id="message_list">
             </div>
@@ -33,6 +33,19 @@
                 <button class="btn btn-outline-primary" type="button" id="btn_send">전송</button>
             </div>
         </div>
+    </div>
+    <div class="container-fluid pt-2 text-center" style="height: 95%" id="username">
+        <h1>채팅하기</h1>
+        <div class="input-group">
+            <span class="input-group-text">사용자명 입력</span>
+            <input class="form-control" type="text" placeholder="Username" id="input_name">
+            <button class="btn btn-primary" type="button" id="btn_enter">확인</button>
+        </div>
+        <span class="small text-secondary">
+            이 프로그램은 Node.js <span id="node-version"></span>,
+            Chromium <span id="chrome-version"></span>,
+            Electron <span id="electron-version"></span> 을 사용중입니다.
+        </span>
     </div>
 
     <script src="../node_modules/socket.io/client-dist/socket.io.js"></script>
