@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+        body, html {
+            height: 100%;
+        }
+
+        .chat-bubble {
+            border-radius: 20px 20px 20px 3px;
+        }
+    </style>
+    <title>Chatting</title>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-primary" style="min-height: 30px; height: 5%">
+        <div class="container-fluid">
+          <span class="navbar-brand mb-0 h1">채팅</span>
+        </div>
+    </nav>
+    <div class="container-fluid d-flex flex-column" style="height: 95%">
+        <div class="container-fluid flex-grow-1 overflow-auto" id="chatting_container">
+            <div class="list-group-flush" id="message_list">
+            </div>
+        </div>
+        <div class="container-fluid p-3 align-items-center" id="input_container">
+            <div class="input-group">
+                <textarea class="form-control border-primary" aria-label="Enter message" id="input_message"></textarea>
+                <button class="btn btn-outline-primary" type="button" id="btn_send">전송</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../node_modules/socket.io/client-dist/socket.io.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="module" src="./js/script.js"></script>
+</body>
+</html>
