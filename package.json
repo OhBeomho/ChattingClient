@@ -1,7 +1,7 @@
 {
-  "name": "chattingclient",
+  "name": "chattingapp",
   "version": "1.0.1",
-  "description": "Chatting Client",
+  "description": "Chatting App",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
