@@ -8,18 +8,19 @@ const message_list = document.querySelector("#message_list")
 
 // 메시지 추가
 function addChat(name, message, time) {
-    const message_span_html = `<span class="p-2 d-flex flex-column align-items-center">
+    const message_span_html = `<span class="pe-1 mw-75 d-flex flex-column align-items-center">
         <img class="rounded-pill flex-grow-1" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" width="50" alt="Profile">
-        <span class="p-1" id="name">${name}</span>
+        <span id="name">${name}</span>
     </span>
-    <span class="p-2 align-middle chat-bubble ${name == my_name ? "bg-primary" : "bg-secondary"} text-white">
-        ${message}
+    <span class="p-2 d-flex align-items-center">
+        <span class="p-2 align-middle text-break chat-bubble ${name == my_name ? "bg-primary" : "bg-secondary"} text-white" style="white-space: pre-wrap;">${message}</span>
     </span>
     <span class="ms-1 text-secondary small">
-         ${time}
-    </span>`
+        ${time}
+    </span>
+    `
     const message_span = document.createElement("span")
-    message_span.classList.add("list-group-item", "d-flex", "p-2", "align-items-center")
+    message_span.classList.add("list-group-item", "d-flex", "p-2", "align-items-end")
     message_span.innerHTML = message_span_html
     message_list.appendChild(message_span)
 
