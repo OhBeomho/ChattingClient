@@ -42,11 +42,13 @@
             <input class="form-control" type="text" placeholder="Username" id="input_name">
             <button class="btn btn-primary" type="button" id="btn_enter">확인</button>
         </div>
-        <span class="small text-secondary">
+        <div class="small text-secondary">
             이 프로그램은 Node.js <span id="node-version"></span>,
             Chromium <span id="chrome-version"></span>,
             Electron <span id="electron-version"></span> 을 사용중입니다.
-        </span>
+        </div>
+        <div class="small text-danger" id="error">
+        </div>
     </div>
 
     <script src="../node_modules/socket.io/client-dist/socket.io.js"></script>
