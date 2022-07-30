@@ -1,8 +1,7 @@
 const {
     app,
     BrowserWindow,
-    Menu,
-    shell
+    Menu
 } = require("electron");
 const path = require("path");
 
@@ -18,10 +17,6 @@ function createWindow() {
         icon: path.join(__dirname, "assets/icon.ico")
     });
     win.loadFile("./src/index.html");
-    win.webContents.addListener("new-window", function (e, url) {
-        e.preventDefault();
-        shell.openExternal(url);
-    });
 
     Menu.setApplicationMenu(null);
 }
