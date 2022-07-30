@@ -24,8 +24,7 @@ function addChat(name, message, time) {
     messageElement.classList.add("d-flex", "p-2", "align-items-end");
     messageElement.innerHTML = messageElementDOM;
     messageList.appendChild(messageElement);
-
-    document.getElementById("chattingContainer").scrollTop = messageList.scrollHeight;
+    document.getElementById("messageListContainer").scrollTop = messageList.scrollHeight;
 }
 
 // 사용자 추가
@@ -55,12 +54,11 @@ function removeUser(name) {
 
 // 서버 메시지 추가
 function serverMessage(message) {
-    const serverMessageElement = document.createElement("span");
+    const serverMessageElement = document.createElement("div");
     serverMessageElement.classList.add("text-secondary");
     serverMessageElement.innerText = message;
     messageList.appendChild(serverMessageElement);
-
-    document.getElementById("chattingContainer").scrollTop = messageList.scrollHeight;
+    messageList.scrollTop = messageList.scrollHeight;
 }
 
 // 메시지 전송
