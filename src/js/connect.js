@@ -1,5 +1,4 @@
-// let url = "http://nodejs-chatting.herokuapp.com";
-let url = "http://localhost:5000";
+let url = "http://nodejs-chatting.herokuapp.com";
 let socket;
 
 export const connect = () => {

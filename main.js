@@ -23,7 +23,7 @@ function createWindow() {
         shell.openExternal(url);
     });
 
-    // Menu.setApplicationMenu(null);
+    Menu.setApplicationMenu(null);
 }
 
 app.whenReady().then(() => {
