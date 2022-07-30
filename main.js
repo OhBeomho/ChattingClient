@@ -4,7 +4,7 @@ const {
     Menu,
     shell
 } = require("electron");
-const path = require("path")
+const path = require("path");
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -16,24 +16,26 @@ function createWindow() {
             contextIsolation: false
         },
         icon: path.join(__dirname, "assets/icon.ico")
-    })
-    win.loadFile("./src/index.html")
+    });
+    win.loadFile("./src/index.html");
     win.webContents.addListener("new-window", function (e, url) {
-        e.preventDefault()
-        shell.openExternal(url)
-    })
+        e.preventDefault();
+        shell.openExternal(url);
+    });
 
-    Menu.setApplicationMenu(null)
+    Menu.setApplicationMenu(null);
 }
 
 app.whenReady().then(() => {
-    createWindow()
+    createWindow();
 
     app.on("activate", () => {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow()
-    })
-})
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow();
+        }
+    });
+});
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit()
-})
+    if (process.platform !== 'darwin') app.quit();
+});

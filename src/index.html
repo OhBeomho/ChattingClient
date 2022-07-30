@@ -13,6 +13,10 @@
         .chat-bubble {
             border-radius: 20px 20px 20px 1px;
         }
+
+        textarea {
+            resize: none;
+        }
     </style>
     <title>Chatting</title>
 </head>
@@ -24,14 +28,20 @@
         </div>
     </nav>
     <div class="container-fluid d-none flex-column" style="height: 95%" id="chatting">
-        <div class="container-fluid flex-grow-1 overflow-auto" id="chatting_container">
-            <div class="list-group-flush" id="message_list">
+        <div class="flex-grow-1 d-flex">
+            <div class="container-fluid flex-grow-1 overflow-auto" id="chattingContainer">
+                <div id="messageList">
+                </div>
+            </div>
+            <div class="overflow-auto">
+                <div class="list-group list-group-flush" id="userList">
+                </div>
             </div>
         </div>
-        <div class="container-fluid p-3 align-items-center" id="input_container">
+        <div class="container-fluid p-3 align-items-center" id="inputContainer">
             <div class="input-group">
-                <textarea class="form-control border-primary" aria-label="Enter message" id="input_message"></textarea>
-                <button class="btn btn-outline-primary" type="button" id="btn_send">전송</button>
+                <textarea class="form-control border-primary" aria-label="Enter message" id="inputMessage"></textarea>
+                <button class="btn btn-outline-primary" type="button" id="sendButton">전송</button>
             </div>
         </div>
     </div>
@@ -39,8 +49,8 @@
         <h1>채팅하기</h1>
         <div class="input-group">
             <span class="input-group-text">사용자명 입력</span>
-            <input class="form-control" type="text" placeholder="Username" id="input_name">
-            <button class="btn btn-primary" type="button" id="btn_enter">확인</button>
+            <input class="form-control" type="text" placeholder="Username" id="inputName">
+            <button class="btn btn-primary" type="button" id="enterButton">확인</button>
         </div>
         <div class="small text-secondary">
             이 프로그램은 Node.js <span id="node-version"></span>,

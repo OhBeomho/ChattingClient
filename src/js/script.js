@@ -2,39 +2,65 @@ import {
     connect
 } from "./connect.js";
 
-let my_name = "";
-let online = 0;
-const message_list = document.querySelector("#message_list");
+let myName = "";
+let userList = [];
+const messageList = document.getElementById("messageList");
+const userListElement = document.getElementById("userList");
 
 // 메시지 추가
 function addChat(name, message, time) {
-    const message_span_html = `<span class="pe-1 mw-75 d-flex flex-column align-items-center">
-        <img class="rounded-pill flex-grow-1" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" width="50" alt="Profile">
+    const messageElementDOM = `<span class="pe-1 mw-75 d-flex flex-column align-items-center">
+        <img class="rounded-pill" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" width="50" alt="Profile">
         <span id="name">${name}</span>
     </span>
     <span class="p-2 d-flex align-items-center">
-        <span class="p-2 align-middle text-break chat-bubble ${name == my_name ? "bg-primary" : "bg-secondary"} text-white" style="white-space: pre-wrap;">${message}</span>
+        <span class="p-2 align-middle text-break chat-bubble ${name == myName ? "bg-primary" : "bg-secondary"} text-white" style="white-space: pre-wrap;">${message}</span>
     </span>
     <span class="ms-1 text-secondary small">
         ${time}
     </span>
     `;
-    const message_span = document.createElement("span");
-    message_span.classList.add("list-group-item", "d-flex", "p-2", "align-items-end");
-    message_span.innerHTML = message_span_html;
-    message_list.appendChild(message_span);
+    const messageElement = document.createElement("div");
+    messageElement.classList.add("d-flex", "p-2", "align-items-end");
+    messageElement.innerHTML = messageElementDOM;
+    messageList.appendChild(messageElement);
 
-    document.querySelector("#chatting_container").scrollTop = message_list.scrollHeight;
+    document.getElementById("chattingContainer").scrollTop = messageList.scrollHeight;
+}
+
+// 사용자 추가
+function addUser(name) {
+    const userElementDOM = `<span class="pe-1 mw-75 d-flex align-items-center">
+        <img class="rounded-pill pe-1" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" width="50" alt="Profile">
+        <span class="${name === myName ? "text-primary" : ""}" id="name">${name}</span>
+    </span>
+    `;
+    const userElement = document.createElement("div");
+    userElement.classList.add("list-group-item");
+    userElement.id = name;
+    userElement.innerHTML = userElementDOM;
+
+    if (name !== myName) {
+        userListElement.appendChild(userElement);
+    } else {
+        userListElement.prepend(userElement);
+    }
+}
+
+// 사용자 제거
+function removeUser(name) {
+    document.querySelector("#userList #" + name).remove();
+    userList = userList.slice(userList.indexOf(name), userList.indexOf(name) + 1);
 }
 
 // 서버 메시지 추가
 function serverMessage(message) {
-    const server_message_span = document.createElement("span");
-    server_message_span.classList.add("list-group-item", "text-secondary");
-    server_message_span.innerText = message;
-    message_list.appendChild(server_message_span);
+    const serverMessageElement = document.createElement("span");
+    serverMessageElement.classList.add("text-secondary");
+    serverMessageElement.innerText = message;
+    messageList.appendChild(serverMessageElement);
 
-    document.querySelector("#chatting_container").scrollTop = message_list.scrollHeight;
+    document.getElementById("chattingContainer").scrollTop = messageList.scrollHeight;
 }
 
 // 메시지 전송
@@ -44,35 +70,34 @@ function send(socket, message, channel) {
     };
 
     socket.emit(channel, {
-        name: my_name,
+        name: myName,
         message
     });
 }
 
 window.onload = () => {
     const socket = connect();
-    if (socket.connected) console.log("Connected");
-    const input_message = document.querySelector("#input_message");
-    const input_name = document.querySelector("#input_name");
+    const inputMessage = document.getElementById("inputMessage");
+    const inputName = document.getElementById("inputName");
 
     // 사용자명 중복검사 결과
     socket.on("name", message => {
         if (message === "EXISTS") {
-            document.querySelector("#error").innerText = "이미 존재하는 사용자명입니다.\n다른 이름으로 시도해 주세요.";
+            document.getElementById("error").innerText = "이미 존재하는 사용자명입니다.\n다른 이름으로 시도해 주세요.";
         } else if (message === "SUCCESS") {
-            my_name = input_name.value;
-            input_name.value = "";
+            myName = inputName.value;
+            inputName.value = "";
 
-            document.querySelector("#chatting").classList.remove("d-none");
-            document.querySelector("#chatting").classList.add("d-flex");
-            document.querySelector("#username").classList.add("d-none");
+            document.getElementById("chatting").classList.remove("d-none");
+            document.getElementById("chatting").classList.add("d-flex");
+            document.getElementById("username").classList.add("d-none");
 
             enterChat();
         }
     });
     // 채팅 채널, 서버 채널 열기
     const enterChat = () => {
-        document.querySelector("#error").innerText = "";
+        document.getElementById("error").innerText = "";
 
         socket.on("chatting", data => {
             const {
@@ -83,27 +108,41 @@ window.onload = () => {
             addChat(name, message, time);
         });
         socket.on("server", data => {
-            online = data.online;
-            document.querySelector("#online").innerText = "온라인: " + online;
+            if (data.message === "JOIN") {
+                addUser(data.name);
+                userList.push(data.name);
+                serverMessage(data.name + "님이 들어왔습니다.\n");
 
-            serverMessage(data.message);
+                document.getElementById("online").innerText = "온라인: " + userList.length;
+            } else if (data.message === "LEAVE") {
+                removeUser(data.name);
+                serverMessage(data.name + "님이 나갔습니다.\n");
+            } else if (data.message === "OLD_USERS") {
+                userList = data.userList;
+
+                for (let i = 0; i < userList.length; i++) {
+                    addUser(userList[i]);
+                }
+            }
+
+            document.getElementById("online").innerText = "온라인: " + userList.length;
         });
     }
 
     // 메시지 전송
-    input_message.addEventListener("keydown", event => {
+    inputMessage.addEventListener("keydown", event => {
         if (event.key === "Enter" && !event.shiftKey) {
-            send(socket, input_message.value, "chatting");
-            input_message.value = "";
+            send(socket, inputMessage.value, "chatting");
+            inputMessage.value = "";
             event.preventDefault();
         }
     });
-    document.querySelector("#btn_send").addEventListener("click", () => {
-        send(socket, input_message.value, "chatting");
-        input_message.value = "";
+    document.getElementById("sendButton").addEventListener("click", () => {
+        send(socket, inputMessage.value, "chatting");
+        inputMessage.value = "";
     });
     // 입력된 사용자명을 서버에 보내서 중복검사
-    document.querySelector("#btn_enter").addEventListener("click", () => {
-        send(socket, input_name.value, "name");
+    document.getElementById("enterButton").addEventListener("click", () => {
+        send(socket, inputName.value, "name");
     });
 }
